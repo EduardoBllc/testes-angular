@@ -1,31 +1,31 @@
-import { TestBed } from "@angular/core/testing";
+import { TestBed } from '@angular/core/testing';
 
-import { GeneroLiterario, Livro } from "../componentes/livro/livro";
-import { livros } from "../mock-livros";
-import { ErroGeneroLiterario, LivroService } from "./livro.service"
+import { GeneroLiterario, Livro } from '../componentes/livro/livro';
+import { livros } from '../mock-livros';
+import { ErroGeneroLiterario, LivroService } from './livro.service';
 
 describe('LivroService', () => {
   let service: LivroService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LivroService]
-    })
+      providers: [LivroService],
+    });
     service = TestBed.inject(LivroService);
   });
 
   it('deveria ser criado', () => {
     expect(service).toBeTruthy();
-  })
+  });
 
   it('deveria adicionar um novo livro', () => {
     const novoLivro: Livro = {
       titulo: 'Novo Livro',
       autoria: 'Autor Desconhecido',
       imagem: 'http://example.com/cover.jpg',
-      genero: {id: 'romance', value: 'Romance'},
+      genero: { id: 'romance', value: 'Romance' },
       dataLeitura: '2024-04-19',
-      classificacao: 5
+      classificacao: 5,
     };
 
     service.adicionarLivro(novoLivro);
@@ -35,7 +35,9 @@ describe('LivroService', () => {
 
   it('deveria recuperar corretamente os livros por gênero', () => {
     const livrosPorGenero = service.obterLivrosPorGenero('romance');
-    const livrosEsperados = livros.filter(livro => livro.genero.id === 'romance')
+    const livrosEsperados = livros.filter(
+      (livro) => livro.genero.id === 'romance'
+    );
     expect(livrosPorGenero).toEqual(livrosEsperados);
   });
 
@@ -51,16 +53,18 @@ describe('LivroService', () => {
     expect(service.generos).toEqual(generosEsperados);
   });
 
-  it('deveria lançar um erro ao tentar cadastrar um livro com gênero desconhecido', () => {
+  it('deveria adicionar o gênero ao tentar cadastrar um livro com gênero desconhecido', () => {
     const novoLivro: Livro = {
       titulo: 'Novo Livro',
       autoria: 'Autor Desconhecido',
       imagem: 'http://example.com/cover.jpg',
-      genero: {id: 'nao-existe', value: 'Não Existe'},
+      genero: { id: 'nao-existe', value: 'Não Existe' },
       dataLeitura: '2024-04-19',
-      classificacao: 5
+      classificacao: 5,
     };
 
-    expect(() => service.adicionarLivro(novoLivro)).toThrow(ErroGeneroLiterario);
-  })
-})
+    service.adicionarLivro(novoLivro);
+
+    expect(service.generos).toContain(novoLivro.genero);
+  });
+});

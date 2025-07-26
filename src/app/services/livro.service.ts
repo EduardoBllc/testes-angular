@@ -1,59 +1,65 @@
+import { livros as livrosMock } from './../mock-livros';
 import { Injectable } from '@angular/core';
-
 import { GeneroLiterario, Livro } from '../componentes/livro/livro';
-import { livros } from '../mock-livros'
 
 export class ErroGeneroLiterario extends Error {
   constructor(mensagem: string) {
     super(mensagem);
-    this.name = "ErroGeneroLiterario";
+    this.name = 'ErroGeneroLiterario';
   }
 }
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LivroService {
-
   public generos: GeneroLiterario[] = [
     {
       id: 'romance',
-      value: 'Romance'
+      value: 'Romance',
     },
     {
       id: 'misterio',
-      value: 'Mistério'
+      value: 'Mistério',
     },
     {
       id: 'fantasia',
-      value: 'Fantasia'
+      value: 'Fantasia',
     },
     {
       id: 'ficcao-cientifica',
-      value: 'Ficção Científica'
+      value: 'Ficção Científica',
     },
     {
       id: 'tecnicos',
-      value: 'Técnicos'
+      value: 'Técnicos',
     },
-  ]
+  ];
 
-  private livrosPorGenero: Map<string, Livro[]> = new Map();
+  public livros = livrosMock;
 
-  constructor() {
-    this.generos.forEach(genero => {
-      this.livrosPorGenero.set(genero.id, []);
+  get livrosPorGenero(): Map<string, Livro[]> {
+    const map = new Map<string, Livro[]>();
+
+    // Inicializa o map com todos os gêneros
+    this.generos.forEach((genero) => {
+      map.set(genero.id, []);
     });
 
-    livros.forEach(livro => {
-      this.livrosPorGenero.get(livro.genero.id)?.push(livro)
+    // Adiciona os livros aos gêneros correspondentes
+    this.livros.forEach((livro) => {
+      map.get(livro.genero.id)?.push(livro);
     });
+
+    return map;
   }
 
+  constructor() {}
+
   adicionarLivro(novoLivro: Livro) {
-    if (!this.livrosPorGenero.has(novoLivro.genero.id)) {
-      throw new ErroGeneroLiterario("Gênero literário desconhecido");
+    if (!this.generos.some((g) => g.id === novoLivro.genero.id)) {
+      this.generos.push(novoLivro.genero);
     }
-    this.livrosPorGenero.get(novoLivro.genero.id)?.push(novoLivro);
+    this.livros.push(novoLivro);
   }
 
   obterLivrosPorGenero(genero: string): Livro[] {

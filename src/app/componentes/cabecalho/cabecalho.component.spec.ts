@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CabecalhoComponent } from "./cabecalho.component"
+import { CabecalhoComponent } from './cabecalho.component';
 
 describe('CabecalhoComponent', () => {
   let component: CabecalhoComponent;
@@ -8,7 +8,7 @@ describe('CabecalhoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CabecalhoComponent],
-    })
+    });
     fixture = TestBed.createComponent(CabecalhoComponent);
     component = fixture.componentInstance;
   });
@@ -26,5 +26,5 @@ describe('CabecalhoComponent', () => {
     component.src = 'https://example.com/test-image.jpg';
     component.alt = 'Imagem teste';
     expect(component).toMatchSnapshot();
-  })
-})
+  });
+});

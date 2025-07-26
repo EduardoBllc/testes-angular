@@ -15,9 +15,9 @@ describe('AvaliacaoEstrelasComponent', () => {
         {
           provide: NG_VALUE_ACCESSOR,
           useExisting: forwardRef(() => AvaliacaoEstrelasComponent),
-          multi: true
-        }
-      ]
+          multi: true,
+        },
+      ],
     });
 
     fixture = TestBed.createComponent(AvaliacaoEstrelasComponent);
@@ -60,10 +60,10 @@ describe('AvaliacaoEstrelasComponent', () => {
 
   it('deveria ignorar valores inválidos e atribuir o valor 1 à classificação', () => {
     const valoresInvalidos = [0, -6, 'abc', undefined];
-    valoresInvalidos.forEach(valorInvalido => {
+    valoresInvalidos.forEach((valorInvalido) => {
       component.writeValue(valorInvalido as any);
       expect(component.classificacao).toBe(1);
-    })
+    });
   });
 
   it('deveria atualizar o DOM quando a classificação muda', () => {
@@ -87,5 +87,4 @@ describe('AvaliacaoEstrelasComponent', () => {
     fixture.detectChanges();
     expect(component.classificacao).toBe(5);
   });
-})
-
+});

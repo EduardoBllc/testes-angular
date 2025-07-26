@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { GeneroLiterario, Livro } from '../../componentes/livro/livro';
@@ -9,18 +14,14 @@ import { AvaliacaoEstrelasComponent } from '../../componentes/avaliacao-estrelas
 @Component({
   selector: 'app-formulario',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    AvaliacaoEstrelasComponent,
-    RouterLink
-  ],
+  imports: [ReactiveFormsModule, AvaliacaoEstrelasComponent, RouterLink],
   templateUrl: './formulario.component.html',
-  styleUrl: './formulario.component.css'
+  styleUrl: './formulario.component.css',
 })
-export class FormularioComponent implements OnInit{
+export class FormularioComponent implements OnInit {
   formulario!: FormGroup;
   livros: Livro[] = [];
-  generos: GeneroLiterario[] = []
+  generos: GeneroLiterario[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,24 +31,26 @@ export class FormularioComponent implements OnInit{
 
   ngOnInit() {
     this.formulario = this.formBuilder.group({
-      titulo: [''],
-      autoria: [''],
+      titulo: ['', Validators.required],
+      autoria: ['', Validators.required],
       imagem: [''],
-      genero: [''],
-      dataLeitura: [''],
-      classificacao: [null]
-    })
-    this.generos = this.livroService.generos
+      genero: ['', Validators.required],
+      dataLeitura: ['', Validators.required],
+      classificacao: [null],
+    });
+    this.generos = this.livroService.generos;
   }
 
   adicionarLivro() {
-    const novoLivro = {
-      ...this.formulario.value,
-      genero: this.generos.find(g => g.id === this.formulario.value.genero),
-    };
+    if (this.formulario.valid) {
+      const novoLivro = {
+        ...this.formulario.value,
+        genero: this.generos.find((g) => g.id === this.formulario.value.genero),
+      };
 
-    this.livroService.adicionarLivro(novoLivro);
-    this.formulario.reset();
-    this.router.navigate(['lista-livros']);
+      this.livroService.adicionarLivro(novoLivro);
+      this.formulario.reset();
+      this.router.navigate(['lista-livros']);
+    }
   }
 }
